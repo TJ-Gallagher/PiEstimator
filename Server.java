@@ -51,7 +51,15 @@ public class Server {
                 System.out.println("Error:  " + e);
                 return;
             }
-        } 
+        }
+        //two pepole have connected
+        ArrayList<String> names = new ArrayList<String>();
+        while(names.size() < 2){
+            for(ConnectionHandler handler: connections) {
+                if(handler.getClientName() == null && handler.getClientName()!= names.get(0) && handler.getClientName()!= names.get(1) )
+                 names.add(handler.getClientName());   
+            }
+        }
         synchronized(connections) {
             for(ConnectionHandler handler: connections) {
                 //make sure you don't try to access the handler from two different threads simultainously
@@ -60,7 +68,8 @@ public class Server {
                 }
             }
         }
-    }
+          
+        }
         //something to let it to know to start /call update in pacman
         
         
@@ -79,7 +88,7 @@ public class Server {
      */
     private static class ConnectionHandler extends Thread {
         private Socket client;
-        private String clientName;
+        private String clientName =null;
         private ObjectOutputStream os;
         private ObjectInputStream is;
         private Player player;
@@ -101,6 +110,9 @@ public class Server {
 
         public Player getPlayer(){
             return player;
+        }
+        public String getClientName(){
+            return clientName;
         }
         
         //method to help us send information!
@@ -124,6 +136,9 @@ public class Server {
                     System.out.println("server received message");
                     if(input instanceof Board){
                         updateBoard = (Board)input;
+                    }
+                    if(input instanceof String){
+                        clientName = (String)input;
                     }
                     //your code to send messages goes here.
                 if(updateBoard != null) {

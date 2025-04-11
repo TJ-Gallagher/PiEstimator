@@ -63,8 +63,7 @@ public class Client extends JFrame {
         
         frame.setVisible(true);
 
-        RecieverThread reciever = new RecieverThread();
-        reciever1 = reciever;
+        reciever1  = new RecieverThread();
         reciever1.start();
        
         //Its own thread to send information
@@ -84,12 +83,15 @@ public class Client extends JFrame {
 
     });
     game();
+    frame.setVisible(false);
 }
     public void game(){
+        System.out.println("game is called");
         boolean a = true;
         while(a){
           a = reciever1.getCheck();
         }
+        System.out.println("check is now false");
         
         //send message to server saying I'd like to connect!
         //when the server responds hide "frame" and "setVisible" yourself
@@ -103,23 +105,12 @@ public class Client extends JFrame {
         setSize(380, 420);
         setLocationRelativeTo(null);
         setVisible(true);
-
-        while(true){
-            update();
-        }
-
-    }
-
-
-    public void update(){
-        try {
-            ooss.writeObject(reciever1.getBoard());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
+        //how to call update?
+        //how to know when it disconnects
 
     }
+
     
 
 
@@ -152,10 +143,10 @@ public class Client extends JFrame {
             while (true) {
                 synchronized(this){
                     try{
-                        Object a = oiss.readObject();
-                        System.out.println("received "+a);
-                       
-                        if(a instanceof String && ((String)a).equals("Start" )){
+                        Object a= oiss.readObject();
+                        System.out.println("I received "+a);
+                        if(a instanceof String && ((String)a).equals("Start")){
+                            System.out.println("understands it Start");
                            check = false;
                         }
                         if(a instanceof String && ((String)a).equals("end")){

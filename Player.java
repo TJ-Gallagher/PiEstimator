@@ -4,10 +4,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javax.swing.Timer;
 
-public class Player implements KeyListener{
+public class Player implements KeyListener, Serializable{
+    private static final long serialVersionUID = 2L;
+    
+    
     private final int PACMAN_SPEED = 6;
 
 
@@ -18,6 +24,21 @@ public class Player implements KeyListener{
     private boolean inGame = false; // might need or nah
     private Board localBoard;
     private String name; //
+    private volatile ObjectOutputStream ooss;
+
+    public void setOOS(ObjectOutputStream input){
+        ooss = input;
+    }
+
+    public void update(){
+        try {
+            ooss.writeObject(localBoard);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
     
 
     private boolean taggerBool;
@@ -92,18 +113,22 @@ public class Player implements KeyListener{
                     req_dx = -1;
                     req_dy = 0;
                     localBoard.movePacman(req_dx, req_dy, pacman_x, pacman_y, pacmand_x, pacmand_y, PACMAN_SPEED, this );
+                    update();
                 } else if (key == KeyEvent.VK_RIGHT) {
                     req_dx = 1;
                     req_dy = 0;
                     localBoard.movePacman(req_dx, req_dy, pacman_x, pacman_y, pacmand_x, pacmand_y, PACMAN_SPEED, this );
+                    update();
                 } else if (key == KeyEvent.VK_UP) {
                     req_dx = 0;
                     req_dy = -1;
                     localBoard.movePacman(req_dx, req_dy, pacman_x, pacman_y, pacmand_x, pacmand_y, PACMAN_SPEED, this );
+                    update();
                 } else if (key == KeyEvent.VK_DOWN) {
                     req_dx = 0;
                     req_dy = 1;
                     localBoard.movePacman(req_dx, req_dy, pacman_x, pacman_y, pacmand_x, pacmand_y, PACMAN_SPEED, this );
+                    update();
                 } else if (key == KeyEvent.VK_ESCAPE /*&& timer.isRunning() */) {
                     inGame = false;
                 } else if (key == KeyEvent.VK_PAUSE) {
@@ -119,6 +144,7 @@ public class Player implements KeyListener{
                     System.out.println("pressed s");
                     localBoard.setInGame(true);
                     localBoard.initGame(); //work on int game
+                    update();
                 }
             
         }

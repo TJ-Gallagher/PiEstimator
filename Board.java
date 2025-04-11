@@ -13,13 +13,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Board extends JPanel implements ActionListener {
+public class Board extends JPanel implements ActionListener, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private Dimension d;
     private final Font smallFont = new Font("Helvetica", Font.BOLD, 14);
 
